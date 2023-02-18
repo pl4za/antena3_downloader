@@ -1,4 +1,4 @@
-# Antena 3 downloaders
+# Antena 3 downloader
 
 A python script the monitors for new episodes of [Bons Rapazes](https://www.rtp.pt/play/p299/)
  and [MQ3](https://www.rtp.pt/play/p255/mq3), then downloads them for offline listening.
