@@ -1,0 +1,12 @@
+# docker compose up -d
+
+version: "2.1"
+services:
+  python:
+    image: python:latest
+    container_name: python
+    volumes:
+      - ./docker/python:/usr/src/app
+      - /media/wd/antena3:/antena3
+    command: "./usr/src/app/entrypoint.sh"
+    restart: on-failure
