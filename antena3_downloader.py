@@ -1,6 +1,7 @@
 from bs4 import *
 from datetime import date
 import requests, os, re, time, schedule
+import eyed3
 
 def schedule_download():
     print("Scheduling download")
@@ -33,8 +34,11 @@ def download_bons_rapazes(root_folder):
     if not path_exists:
         print("Downloading bons rapazes episode: " + episode_name)
         download_and_save_mp3(webpage, target)
+        album_art = root_folder + "/bons_rapazes/folder.jpg"
+        save_album_art(target, album_art, episode_name, "Bons Rapazes")
     else:
         print("Episode already exists: " + target)
+        album_art = root_folder + "/bons_rapazes/folder.jpg"
 
 def download_mq3(root_folder):
     # Domingo, entre as 0h e as 2h.
@@ -46,6 +50,8 @@ def download_mq3(root_folder):
     if not path_exists:
         print("Downloading mq3 episode: " + episode_name)
         webpage = download_and_save_mp3(webpage, target)
+        album_art = root_folder + "/mq3/folder.jpg"
+        save_album_art(target, album_art, episode_name, "MQ3")
         download_mq3_first_hour(webpage, root_folder)
     else:
         print("Episode already exists: " + target)
@@ -61,8 +67,21 @@ def download_mq3_first_hour(webpage, root_folder):
     if not path_exists:
         print("Downloading mq3 episode: " + episode_name)
         download_and_save_mp3(webpage, target)
+        album_art = root_folder + "/mq3/folder.jpg"
+        save_album_art(target, album_art, episode_name, "MQ3")
     else:
         print("Episode already exists: " + target)
+
+def save_album_art(file, album_art, title, artist):
+    print("Saving album art for file:" + file)
+    song = eyed3.load(file)
+    song.initTag()
+    song.tag.artist = artist
+    song.tag.title = title
+    with open(album_art, "rb") as cover_art:
+        song.tag.images.set(3, cover_art.read(), "image/jpg")
+    song.tag.save()
+
 
 def get_episode_name(webpage):
     links = webpage.findAll('meta', {'itemprop': 'name'})
